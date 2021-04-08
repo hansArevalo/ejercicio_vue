@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     amigos:[
       {
+        id: 1,
         nombre:'Maria',
         apellido: 'Mendoza',
         telefono: '32145677',
@@ -15,25 +16,31 @@ export default new Vuex.Store({
     
   },
   mutations: {
-    addAmigo(state, amigo){
+    addFriend(state, amigo){
     state.amigos.push(amigo);
     },
-    deleteAmigo(state, index){
+    deleteFriend(state, index){
       state.amigos.splice(index,1);
+    },
+    updateFriend(amigo, id){
+      console.log(amigo);
     }
 
   },
   actions: {
-    addAmigoAction({commit},amigo){
-      commit('addAmigo', amigo); 
+    addFriendAction({commit},amigo){
+      commit('addFriend', amigo); 
     },
-    deleteAmigoAction({commit},index){
-      commit('deleteAmigo', index);
+    deleteFriendAction({commit},index){
+      commit('deleteFriend', index);
+    },
+    updateFriendAction({commit},index){
+      commit('updateFriend', index);
     }
 
   },
   getters:{
-    getAmigos(state){
+    getFriends(state){
       return state.amigos;
     }
   }

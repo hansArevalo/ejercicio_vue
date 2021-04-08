@@ -3,24 +3,29 @@
     <h1>{{ $store.getters.mensaje }}</h1>
     <h4>{{$store.getters.nombreCompleto}}</h4>
     <h2>AMIGOS</h2>
+
+    <!-- formulario para agregar contactos -->
     <div class="form-amigo container" >
       <div class="input-group flex-nowrap mb-3">
         <span class="input-group-text" id="addon-wrapping">Nombre:</span>
-        <input type="text" class="form-control" placeholder="nombre" aria-label="nombre" aria-describedby="addon-wrapping" v-model="amigo.nombre">
+        <input type="text" class="form-control" placeholder="Nombre" aria-label="nombre" aria-describedby="addon-wrapping" v-model="amigo.nombre">
       </div>
       <div class="input-group flex-nowrap mb-3">
         <span class="input-group-text" id="addon-wrapping">Apellido:</span>
-        <input type="text" class="form-control" placeholder="apellido" aria-label="apellido" aria-describedby="addon-wrapping" v-model="amigo.apellido">
+        <input type="text" class="form-control" placeholder="Apellido" aria-label="apellido" aria-describedby="addon-wrapping" v-model="amigo.apellido">
       </div>
           <div class="input-group flex-nowrap mb-3">
         <span class="input-group-text" id="addon-wrapping">Telefono:</span>
-        <input type="number" class="form-control" placeholder="telefono" aria-label="Username" aria-describedby="addon-wrapping" v-model="amigo.telefono">
+        <input type="number" class="form-control" placeholder="Telefono" aria-label="Username" aria-describedby="addon-wrapping" v-model="amigo.telefono">
       </div>
       <div class="container">
-        <button @click="addAmigo" class="btn btn-info"> agregar amigo</button>
+        <!-- boton agregar contacto -->
+        <button @click="addFriend" class="btn btn-info"> Agregar amigo</button>
               
       </div>
     </div>
+    <h2>{{formUpdate}} {{currentId}}</h2>
+    <!-- Tabla donde se muestran los datos -->
     <div class="table-amigos">
       <table class="table table-striped">
         <thead>
@@ -33,19 +38,37 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(amigo,index) in getAmigos" :key="index">
-            <th scope="row">{{index + 1}}</th>
-            <td>{{amigo.nombre}}</td>
-            <td>{{amigo.apellido}}</td>
-            <td>{{amigo.telefono}}</td>
+          <tr v-for="(amigo,index) in getFriends" :key="index">
+            <th scope="row">{{amigo.id}}</th>
             <td>
-              <button @click="deleteAmigo(index)" class="btn btn-danger"> eliminar</button>
+              <!-- <span v-if="formUpdate && currentId == index">
+                <input v-model="updateAmigo.nombre" type="text" >
+              </span>
+              <span v-else>
+                {{amigo.nombre}}
+              </span> -->
+              {{amigo.nombre}}
             </td>
+            <td>
+              {{amigo.apellido}}
+            </td>
+            <td>
+              {{amigo.telefono}}
+            </td>
+            <td>
+              <!-- boton eliminar contacto o amigo -->
+              <button @click="deleteFriend(index)" class="btn btn-outline-danger"> Eliminar</button>
+              <!-- boton actualizar contacto o amigo -->
+              <button  class="btn btn-outline-success"  data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap" @click="updateFriend(amigo.id)"> Editar</button>
+            </td>
+             <!-- Formulario para actualizar pendiente-->
           </tr>
         </tbody>
       </table>
     </div>
+   
   </div>
+  
   
 </template>
 
@@ -53,32 +76,54 @@
 import {mapActions, mapGetters} from 'vuex';
 export default {
   name: 'HelloWorld',
+  // modelo
   data(){
     return{
+      cont: 1,
+      formUpdate: false,
       amigo: {
+        id:0,
+        nombre:'',
+        apellido:'',
+        telefono:'',
+      },
+      currentId:'',
+      updateAmigo: {
+        id:0,
         nombre:'',
         apellido:'',
         telefono:'',
       }
     }
   },
+  // metodos
   methods:{
-    ...mapActions(['addAmigoAction','deleteAmigoAction']),
-    addAmigo(){
-      this.addAmigoAction(this.amigo);
+    ...mapActions(['addFriendAction','deleteFriendAction','updateFriendAction']),
+    addFriend(){
+      this.cont= this.cont + 1;
+      this.amigo.id = this.cont;
+      this.addFriendAction(this.amigo);
       this.amigo= {
+        id: '',
         nombre:'',
         apellido:'',
         telefono:'',
       } 
     },
-    deleteAmigo(index){
-      console.log(index);
-      this.deleteAmigoAction(index);
-    }
+    deleteFriend(index){
+      this.deleteFriendAction(index);
+    },
+    updateFriend(id, updateAmigo){
+      console.log(id);
+      this.formUpdate= true;
+      this.currentId = id;
+      console.log(this.formUpdate);
+      // this.updateFriendAction(id, this.updateAmigo);
+    },
   },
+  // propiedad computada
   computed:{
-    ...mapGetters(['getAmigos'])
+    ...mapGetters(['getFriends'])
   }
 }
 </script>
