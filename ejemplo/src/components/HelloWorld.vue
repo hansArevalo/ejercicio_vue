@@ -1,7 +1,6 @@
 <template>
   <div class="hello"> 
-    <h1>{{ $store.getters.mensaje }}</h1>
-    <h4>{{$store.getters.nombreCompleto}}</h4>
+    
     <h2>AMIGOS</h2>
 
     <!-- formulario para agregar contactos -->
@@ -20,11 +19,10 @@
       </div>
       <div class="container">
         <!-- boton agregar contacto -->
-        <button @click="addFriend" class="btn btn-info"> Agregar amigo</button>
+        <button @click="addFriend" class="btn btn-info"> Guardar</button>
               
       </div>
     </div>
-    <h2>{{formUpdate}} {{currentId}}</h2>
     <!-- Tabla donde se muestran los datos -->
     <div class="table-amigos">
       <table class="table table-striped">
@@ -41,12 +39,6 @@
           <tr v-for="(amigo,index) in getFriends" :key="index">
             <th scope="row">{{amigo.id}}</th>
             <td>
-              <!-- <span v-if="formUpdate && currentId == index">
-                <input v-model="updateAmigo.nombre" type="text" >
-              </span>
-              <span v-else>
-                {{amigo.nombre}}
-              </span> -->
               {{amigo.nombre}}
             </td>
             <td>
@@ -59,9 +51,8 @@
               <!-- boton eliminar contacto o amigo -->
               <button @click="deleteFriend(index)" class="btn btn-outline-danger"> Eliminar</button>
               <!-- boton actualizar contacto o amigo -->
-              <button  class="btn btn-outline-success"  data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap" @click="updateFriend(amigo.id)"> Editar</button>
+              <button  class="btn btn-outline-success"  @click="updateFriend(amigo)"> Editar</button>
             </td>
-             <!-- Formulario para actualizar pendiente-->
           </tr>
         </tbody>
       </table>
@@ -74,51 +65,46 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex';
+
 export default {
   name: 'HelloWorld',
+
   // modelo
   data(){
     return{
       cont: 1,
-      formUpdate: false,
       amigo: {
         id:0,
         nombre:'',
         apellido:'',
         telefono:'',
-      },
-      currentId:'',
-      updateAmigo: {
-        id:0,
-        nombre:'',
-        apellido:'',
-        telefono:'',
-      }
+      }, 
     }
   },
   // metodos
   methods:{
     ...mapActions(['addFriendAction','deleteFriendAction','updateFriendAction']),
     addFriend(){
-      this.cont= this.cont + 1;
-      this.amigo.id = this.cont;
-      this.addFriendAction(this.amigo);
-      this.amigo= {
-        id: '',
-        nombre:'',
-        apellido:'',
-        telefono:'',
+      if(this.amigo.id == ""){
+        this.cont= this.cont + 1;
+        this.amigo.id = this.cont;
+        this.addFriendAction(this.amigo);
+      }else{
+        this.updateFriendAction(this.amigo);
       } 
+      this.amigo= {
+          id: '',
+          nombre:'',
+          apellido:'',
+          telefono:'',
+        }
     },
     deleteFriend(index){
       this.deleteFriendAction(index);
     },
-    updateFriend(id, updateAmigo){
-      console.log(id);
-      this.formUpdate= true;
-      this.currentId = id;
-      console.log(this.formUpdate);
-      // this.updateFriendAction(id, this.updateAmigo);
+    updateFriend(amigo_upDate){
+      this.amigo=amigo_upDate;
+
     },
   },
   // propiedad computada

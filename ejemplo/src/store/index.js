@@ -22,8 +22,8 @@ export default new Vuex.Store({
     deleteFriend(state, index){
       state.amigos.splice(index,1);
     },
-    updateFriend(amigo, id){
-      console.log(amigo);
+    updateFriend(state,amigo){
+      state.amigos[amigo.id-1]=amigo;
     }
 
   },
@@ -34,8 +34,8 @@ export default new Vuex.Store({
     deleteFriendAction({commit},index){
       commit('deleteFriend', index);
     },
-    updateFriendAction({commit},index){
-      commit('updateFriend', index);
+    updateFriendAction({commit},amigo){
+      commit('updateFriend', amigo);
     }
 
   },
